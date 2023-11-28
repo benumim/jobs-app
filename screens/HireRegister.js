@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import firebase from "firebase";
+
 
 const data = [
   { label: 'Fortaleza', value: '1' },
@@ -30,13 +32,32 @@ const data2 = [
 ];
 
 const DropdownComponent2 = () => {
-  const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
+  const [name, setName] = useState('');
+  const [contact, setContact] = useState('');
+  const [city, setCity] = useState(null);
+  const [service, setService] = useState(null);
+
+  const saveDataToFirebase = () => {
+    firebase.database().ref('users').push({
+      name,
+      contact,
+      city,
+      service,
+    });
+
+    // Reset the form after saving data
+    setName('');
+    setContact('');
+    setCity(null);
+    setService(null);
+  };
 
   const renderLabel = () => {
-    if (value || isFocus) {
+    if (city || service) {
       return (
-        <Text style={[styles.label, isFocus && { color: '#F52F57' }]}></Text>
+        <Text style={[styles.label, (city || service) && { color: '#F52F57' }]}>
+          {city || service}
+        </Text>
       );
     }
     return null;
@@ -48,6 +69,8 @@ const DropdownComponent2 = () => {
         Cadastre-se
       </Text>
       <TextInput
+        value={name}
+        onChangeText={(text) => setName(text)}
         style={{
           borderWidth: 2,
           height: 30,
@@ -59,6 +82,8 @@ const DropdownComponent2 = () => {
         placeholderTextColor={'#F52F57'}
       />
       <TextInput
+        value={contact}
+        onChangeText={(text) => setContact(text)}
         style={{
           borderWidth: 2,
           height: 30,
@@ -69,67 +94,22 @@ const DropdownComponent2 = () => {
         placeholder={'Contato'}
         placeholderTextColor={'#F52F57'}
       />
-      {renderLabel()}
-      <Dropdown
-        style={[styles.dropdown, isFocus && { borderColor: '#F52F57' }]}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        inputSearchStyle={styles.inputSearchStyle}
-        iconStyle={styles.iconStyle}
-        data={data}
-        search
-        maxHeight={300}
-        labelField="label"
-        valueField="value"
-        placeholder={!isFocus ? 'Cidade' : '...'}
-        searchPlaceholder="Procurar..."
-        value={value}
-        onFocus={() => setIsFocus(true)}
-        onBlur={() => setIsFocus(false)}
-        onChange={(item) => {
-          setValue(item.value);
-          setIsFocus(false);
+      <TextInput
+        value={city}
+        onChangeText={(text) => setCity(text)}
+        style={{
+          borderWidth: 2,
+          height: 30,
+          borderRadius: 7,
+          marginTop: 10,
+          borderColor: '#F79D5C',
         }}
-        renderLeftIcon={() => (
-          <AntDesign
-            style={styles.icon}
-            color={isFocus ? '#F52F57' : 'black'}
-            name="Safety"
-            size={20}
-          />
-        )}
+        placeholder={'Cidade(Obs.: apenas municípios do Ceará)'}
+        placeholderTextColor={'#F52F57'}
       />
-
-      <Dropdown
-        style={[styles.dropdown, isFocus && { borderColor: '#F52F57' }]}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        inputSearchStyle={styles.inputSearchStyle}
-        iconStyle={styles.iconStyle}
-        data={data2}
-        search
-        maxHeight={300}
-        labelField="label"
-        valueField="value"
-        placeholder={!isFocus ? 'Serviço' : '...'}
-        searchPlaceholder="Procurar..."
-        value={value}
-        onFocus={() => setIsFocus(true)}
-        onBlur={() => setIsFocus(false)}
-        onChange={(item) => {
-          setValue(item.value);
-          setIsFocus(false);
-        }}
-        renderLeftIcon={() => (
-          <AntDesign
-            style={styles.icon}
-            color={isFocus ? '#F52F57' : 'black'}
-            name="Safety"
-            size={20}
-          />
-        )}
-      />
+      
       <TouchableOpacity
+        onPress={saveDataToFirebase}
         style={{
           alignSelf: 'center',
           marginTop: 20,
@@ -149,19 +129,6 @@ const styles = StyleSheet.create({
     padding: 16,
     flex: 1,
   },
-  dropdown: {
-    height: 50,
-    borderWidth: 2,
-    borderRadius: 8,
-    borderColor: '#F79D5C',
-    paddingHorizontal: 8,
-    marginTop: 10,
-    color: '#F52F57',
-  },
-  icon: {
-    marginRight: 5,
-    color: '#F52F57',
-  },
   label: {
     position: 'absolute',
     backgroundColor: 'white',
@@ -172,24 +139,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#F52F57',
   },
-  placeholderStyle: {
-    fontSize: 16,
-    color: '#F52F57',
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-    color: '#F52F57',
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-    color: '#F52F57',
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-    color: '#F52F57',
-  },
 });
 
 export default DropdownComponent2;
+
