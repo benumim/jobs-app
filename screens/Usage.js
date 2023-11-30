@@ -49,26 +49,6 @@ export default class Usage extends Component {
             style={{ alignSelf: 'center', color: '#F52F57' }}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('list')}
-          style={{
-            alignSelf: 'center',
-            marginTop: 10,
-            borderWidth: 2,
-            borderRadius: 6,
-            width: 200,
-            padding: 10,
-            borderColor: '#F79D5C',
-          }}>
-          <Text style={{ textAlign: 'center', fontSize: 18, color: '#F52F57' }}>
-            Visualizar
-          </Text>
-          <Ionicons
-            name={'eye'}
-            size={20}
-            style={{ alignSelf: 'center', color: '#F52F57' }}
-          />
-        </TouchableOpacity>
       </View>
     );
   }

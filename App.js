@@ -32,17 +32,6 @@ function MyStack() {
         name="usage"
         component={Usage}
       />
-           <Stack.Screen
-        options={{
-          title: 'Encontre alguém',
-          headerStyle: { backgroundColor: '#F52F57' },
-          headerTitleStyle: { color: '#F79D5C' },
-        }}
-        name="list"
-        component={List}
-      />
-    
- 
       <Stack.Screen
         options={{
           title: 'Cadastro',
@@ -61,6 +50,16 @@ function MyStack() {
         name="registro contrato"
         component={DropdownComponent2}
       />
+           <Stack.Screen
+        options={{
+          title: 'Encontre alguém',
+          headerStyle: { backgroundColor: '#F52F57' },
+          headerTitleStyle: { color: '#F79D5C' },
+        }}
+        name="list"
+        component={List}
+      />
+      
     </Stack.Navigator>
   );
 }

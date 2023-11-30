@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,38 +6,25 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import firebase from "firebase";
 
+class DropdownComponent2 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      contact: '',
+      city: null,
+      service: null,
+    };
 
-const data = [
-  { label: 'Fortaleza', value: '1' },
-  { label: 'Caucaia', value: '2' },
-  { label: 'Sobral', value: '3' },
-  { label: 'Viçosa', value: '4' },
-  { label: 'Juazeiro do Norte', value: '5' },
-  { label: 'Maracanaú', value: '6' },
-  { label: 'Eusébio', value: '7' },
-  { label: 'Aquiraz', value: '8' },
-];
+    // Vinculando métodos ao contexto da classe
+    this.saveDataToFirebase = this.saveDataToFirebase.bind(this);
+    this.renderLabel = this.renderLabel.bind(this);
+  }
 
-const data2 = [
-  { label: 'Babá', value: '9' },
-  { label: 'Cuidado com Pets', value: '10' },
-  { label: 'Cozinha', value: '11' },
-  { label: 'Faxina', value: '12' },
-  { label: 'Louça', value: '13' },
-  { label: 'Roupa', value: '14' },
-];
-
-const DropdownComponent2 = () => {
-  const [name, setName] = useState('');
-  const [contact, setContact] = useState('');
-  const [city, setCity] = useState(null);
-  const [service, setService] = useState(null);
-
-  const saveDataToFirebase = () => {
+  saveDataToFirebase() {
+    const { name, contact, city, service } = this.state;
     firebase.database().ref('users').push({
       name,
       contact,
@@ -46,13 +33,16 @@ const DropdownComponent2 = () => {
     });
 
     // Reset the form after saving data
-    setName('');
-    setContact('');
-    setCity(null);
-    setService(null);
-  };
+    this.setState({
+      name: '',
+      contact: '',
+      city: null,
+      service: null,
+    });
+  }
 
-  const renderLabel = () => {
+  renderLabel() {
+    const { city, service } = this.state;
     if (city || service) {
       return (
         <Text style={[styles.label, (city || service) && { color: '#F52F57' }]}>
@@ -61,73 +51,69 @@ const DropdownComponent2 = () => {
       );
     }
     return null;
-  };
+  }
 
-  return (
-    <View style={styles.container}>
-      <Text style={{ fontSize: 25, alignSelf: 'center', color: '#F79D5C' }}>
-        Cadastre-se
-      </Text>
-      <TextInput
-        value={name}
-        onChangeText={(text) => setName(text)}
-        style={{
-          borderWidth: 2,
-          height: 30,
-          borderRadius: 7,
-          marginTop: 10,
-          borderColor: '#F79D5C',
-        }}
-        placeholder={'Nome'}
-        placeholderTextColor={'#F52F57'}
-      />
-      <TextInput
-        value={contact}
-        onChangeText={(text) => setContact(text)}
-        style={{
-          borderWidth: 2,
-          height: 30,
-          borderRadius: 7,
-          marginTop: 10,
-          borderColor: '#F79D5C',
-        }}
-        placeholder={'Contato'}
-        placeholderTextColor={'#F52F57'}
-      />
-      <TextInput
-        value={city}
-        onChangeText={(text) => setCity(text)}
-        style={{
-          borderWidth: 2,
-          height: 30,
-          borderRadius: 7,
-          marginTop: 10,
-          borderColor: '#F79D5C',
-        }}
-        placeholder={'Cidade(Obs.: apenas municípios do Ceará)'}
-        placeholderTextColor={'#F52F57'}
-      />
-      
-      <TouchableOpacity
-        onPress={saveDataToFirebase}
-        style={{
-          alignSelf: 'center',
-          marginTop: 20,
-          borderWidth: 2,
-          borderRadius: 6,
-          borderColor: '#F79D5C',
-        }}>
-        <Text style={{ color: '#F52F57' }}>Pronto</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+  render() {
+    const { name, contact, city } = this.state;
+    return (
+      <View style={styles.container}>
+        <Text style={{ fontSize: 25, alignSelf: 'center', color: '#F79D5C' }}>
+          Cadastre-se
+        </Text>
+        <TextInput
+          value={name}
+          onChangeText={(text) => this.setState({ name: text })}
+          style={styles.input}
+          placeholder={'Nome'}
+          placeholderTextColor={'#F52F57'}
+        />
+        <TextInput
+          value={contact}
+          onChangeText={(text) => this.setState({ contact: text })}
+          style={styles.input}
+          placeholder={'Contato'}
+          placeholderTextColor={'#F52F57'}
+        />
+        <TextInput
+          value={city}
+          onChangeText={(text) => this.setState({ city: text })}
+          style={styles.input}
+          placeholder={'Cidade(Obs.: apenas municípios do Ceará)'}
+          placeholderTextColor={'#F52F57'}
+        />
+        
+        <TouchableOpacity
+          onPress={()=> this.props.navigation.navigate("list")}
+          style={styles.button}>
+          <Text style={styles.buttonText}>Pronto</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#A20021',
     padding: 16,
     flex: 1,
+  },
+  input: {
+    borderWidth: 2,
+    height: 30,
+    borderRadius: 7,
+    marginTop: 10,
+    borderColor: '#F79D5C',
+  },
+  button: {
+    alignSelf: 'center',
+    marginTop: 20,
+    borderWidth: 2,
+    borderRadius: 6,
+    borderColor: '#F79D5C',
+  },
+  buttonText: {
+    color: '#F52F57',
   },
   label: {
     position: 'absolute',
